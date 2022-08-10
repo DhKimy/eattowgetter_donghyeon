@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" name="viewport" content ="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/app.css" />
+    <title>EatTwoGetter</title>
+
+
+</head>
+<body>
+    <!-- 헤더 / navbar start -->
+    <nav class="navbar navbar-light" style="background-color: #367daf">
+        <div class="container max-vh-25">
+            <a class="navbar-brand" href="/home">
+                <img margin-left="20" width="80" height="80" alt="" src="/images/mainLogo.png">
+            </a>
+            <a class="navbar-brand flex-center" href="/home">EatTwoGetter</a>
+        </div>
+    </nav>
+    <!-- 헤더 끝 -->
+
+    <!-- 왼쪽 네비게이션 바 -->
+    <div class="container-fluid ">
+        <div class="row flex-nowrap ">
+            <div class="col-lg col-md-3 col-xl-2 px-sm-auto px-0 " style="background-color: #e3f2fd ">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">메뉴</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link align-middle px-0 text-dark">
+                                <span class="ms-1 d-none d-sm-inline">회원정보관리</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#submenu1" class="nav-link px-0 align-middle text-dark">
+                                <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle text-dark">
+                                <span class="ms-1 d-none d-sm-inline">기능3</span></a>
+                        </li>
+                        <li>
+                            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                                <span class="ms-1 d-none d-sm-inline">토글박스</span></a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="40" height="40" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">이용자 별명</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">내정보관리</a></li>
+                            <li><a class="dropdown-item" href="#">절약한 배달비 보기</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- map -->
+            <div class="col py-3">
+                <div class="col-lg col-md-3 col-xl-2 px-sm-auto px-0" id="map" style="margin:0; width: 100%; height: 100%;"></div>
+                <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+            </div>
+            <!--<div>
+                <div class="hAddr">
+                    <span class="title">지도중심기준 행정동 주소정보</span>
+                    <span id="centerAddr"></span>
+                    <div id="clickLatlng"></div>
+                    <hr>
+                    <p id="result"></p>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+
+<!-- services 라이브러리 불러오기 -->
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e3722af7f8f20fb898aaa5d0db9511bb&libraries=services"></script>
+<script>
+    // 1. 지도 생성
+
+    // 초기 지도 센터값 설정
+    var x = 37.48875;
+    var y = 126.93687;
+
+    // 주소-좌표 변환 객체를 생성합니다
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+
+    mapOption = {
+        center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
+        level: 3, // 지도의 확대 레벨
+        mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+    };
+
+    // 지도를 생성한다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    // 확대, 축소 기능(줌 컨트롤)
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT); // 파라미터(컨트롤, 위치)
+
+    // gps 위치 버튼(직접 구현 필요. 마커가 이동하는 것 처럼만 보이게 하면 될듯.)
+
+
+    // 2. 마커 생성
+
+    // 마커 객체 생성
+    var marker = new kakao.maps.Marker({
+        // 지도 중심좌표에 마커를 생성합니다
+        map: map,
+        position: locPosition
+    });
+
+    // 3. 위치 수집 기능(GeoLocation)
+
+    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+    if (navigator.geolocation) {
+
+        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            var lat = position.coords.latitude, // 위도
+                lon = position.coords.longitude; // 경도
+
+            var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+
+            // 마커와 인포윈도우를 표시합니다
+            displayMarker(locPosition);
+        });
+
+    } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+
+        var locPosition = new kakao.maps.LatLng(x, y);
+
+        displayMarker(locPosition);
+    }
+
+
+
+
+    // 4. displayMarker 함수(지도에 마커를 표시하는 함수)
+
+    function displayMarker(locPosition) {
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: locPosition
+    });
+
+    // 마우스로 맵을 드래그 할 때 나타나는 이벤트리스너
+    kakao.maps.event.addListener(map, 'dragend', function(mouseEvent) {
+        var position = map.getCenter();
+        marker.setPosition(position);
+    });
+
+    // 지도 중심좌표를 접속위치로 변경합니다
+    map.setCenter(locPosition);
+    }
+
+    // 5. 지도의 중심 위치의 위도, 경도 불러오기
+
+
+    // 6. 중심 위치의 위도, 경도를 기반으로 하여 주소 정보 가져오기
+
+
+
+// 7. 주소로 좌표 검색, 검색창을 활용해서 직접 주소를 옮기는 기능
+</script>
+
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+    function sample6_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    document.getElementById("sample6_extraAddress").value = extraAddr;
+
+                } else {
+                    document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample6_postcode').value = data.zonecode;
+                document.getElementById("sample6_address").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("sample6_detailAddress").focus();
+            }
+        }).open();
+    }
+</script>
+
+
+</body>
+</html>
