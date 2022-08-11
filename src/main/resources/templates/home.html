@@ -21,6 +21,19 @@
     </nav>
     <!-- 헤더 끝 -->
 
+    <!-- test buttons -->
+    <section>
+        <input class="" type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+        <div class="hAddr">
+            <span class="title">현재위치</span>
+            <span id="addrSet"></span>
+        </div>
+        <button href="http://localhost:8080/modal">modal</button>
+        <button href="http://localhost:8080/modal" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop3" >
+            Scrolling long content
+        </button>
+    </section>
+
     <!-- 왼쪽 네비게이션 바 -->
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -73,10 +86,10 @@
                     </div>
                 </div>
             </div>
+
             <!-- map -->
             <div class="map_wrap col py-3">
-                <div class="col-lg col-md-3 col-xl-2 px-sm-auto px-0 min-vh-100" id="map" style="margin:0; width: 100%; height: 100%;"></div>
-                <input class="" type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+                <div class="col-lg col-md-3 col-xl-2 px-sm-auto px-0 min-vh-100" id="map" style="margin:0; width: 70%; height: 70%;"></div>
                 <ul id="category">
                     <li id="BK9" data-order="0">
                         <span class="category_bg bank"></span>
@@ -103,96 +116,12 @@
                         야식
                     </li>
                 </ul>
-                <div class="hAddr">
-                    <span class="title">현재위치</span>
-                    <span id="addrSet"></span>
-                </div>
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">
-                    Scrolling long content
-                </button>
             </div>
-
-
-            <!-- 마커생성 모달 -->
-
-
-            <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <!--modal header-->
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <br>
-
-                        <!--modal header end-->
-
-                        <!--modal body-->
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-row">
-                                    <div class="col-md-3 mb-3">
-                                        <label for="validationDefault01">음식유형</label>
-                                        <select class="custom-select" id="validationDefault01" required>
-                                            <option selected disabled value="">Choose...</option>
-                                            <option value="1">한식</option>
-                                            <option value="2">중식</option>
-                                            <option value="3">양식</option>
-                                            <option value="3">일식</option>
-                                            <option value="3">카페</option>
-                                            <option value="3">디저트</option>
-                                            <option value="3">야식</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-15 mb-5">
-                                        <label for="validationDefault02">가게이름</label>
-                                        <input type="text" class="form-control" id="validationDefault02" required>
-                                    </div>
-                                    <div class="col-15 mb-5">
-                                        <label for="validationDefault03">메뉴이름</label>
-                                        <input type="text" class="form-control" id="validationDefault03"  required>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col-15 mb-5">
-                                        <label for="validationDefault04">현재금액</label>
-                                        <input type="text" class="form-control" id="validationDefault04" required>
-                                    </div>
-                                    <div class="col-15 mb-5">
-                                        <label for="validationDefault05">최소주문금액</label>
-                                        <input type="text" class="form-control" id="validationDefault05" required>
-                                    </div>
-                                    <div class="col-15 mb-5">
-                                        <label for="validationDefault06">배달료</label>
-                                        <input type="text" class="form-control" id="validationDefault06" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
-                                        <label class="form-check-label" for="invalidCheck2">
-                                            Agree to terms and conditions
-                                        </label>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" type="submit">Submit form</button>
-                            </form>
-                        </div>
-                        <!--modal body end-->
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <a href="/chat" type="button" class="btn btn-primary">채팅하기</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </div>
+
+
+
 
 <!-- services 라이브러리 불러오기 -->
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e3722af7f8f20fb898aaa5d0db9511bb&libraries=services"></script>
@@ -222,6 +151,8 @@
 
     // gps 위치 버튼(직접 구현 필요. 마커가 이동하는 것 처럼만 보이게 하면 될듯.)
 
+</script>
+<script>
 
     // 2. 마커 생성
 
@@ -277,9 +208,13 @@
     map.setCenter(locPosition);
     }
 
+</script>
+<script>
 
     // 5. 지도의 중심 위치의 위도, 경도 불러오기, 그 위치의 주소 정보 가져오기
 
+    var geocoder = new kakao.maps.services.Geocoder();
+    var latlng = map.getCenter();
     // 현재 지도에서 보이는 중심 부분의 경위도를 불러온다. (이동을 인식하는 이벤트리스너 추가)
     kakao.maps.event.addListener(map, 'center_changed', function() {
 
@@ -287,9 +222,7 @@
         var latlng = map.getCenter();
 
     });
-
-    var geocoder = new kakao.maps.services.Geocoder();
-
+    var latlng = map.getCenter();
     function searchDetailAddrFromCoords(coords, callback) {
         // 좌표로 법정동 상세 주소 정보를 요청합니다
         geocoder.coord2Address(latlng.getLat(), latlng.getLng(), callback);
@@ -316,6 +249,8 @@
     });
 
 
+</script>
+<script>
 
 
     // 7. 왼쪽 상단 메뉴 필터링바

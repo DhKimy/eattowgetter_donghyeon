@@ -13,4 +13,10 @@ public class homeController {
 
         return "home";
     }
+
+    @RequestMapping("/modal")
+    public String modalpage(){
+
+        return "modal";
+    }
 }
