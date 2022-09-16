@@ -545,7 +545,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
 김동현2 : 열심히 마무리 하자
 
-이승훈 : 
+이승훈 : 꾸준한 복습만이 살길이라 생각하고 실습의 중요성을 느꼈다
 
 손정아 : 도커 실습 중 도커라이즈 부분이 어려워서 주말동안 복습해야 필요할 것 같다. 
 
