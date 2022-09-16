@@ -317,7 +317,7 @@ docker build -t examhello .
 docker images
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4c716920-9ff8-4c35-a565-b9dcf241b5d8/Untitled.png)
+
 
 ## 📌 Spring Boot
 
@@ -327,15 +327,15 @@ docker images
 
 **현재 메인 페이지에서 일어나는 상황을 보면, `요청이 총 세 번 발생`하게 된다. (두 번도 맞음)**
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d6a9245d-6a28-496c-99b7-64df67bc018a/Untitled.png)
+
 
 1. **메인 페이지 접근 요청**
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b2a33f7f-8a2c-4189-88b1-6cb48714f69f/Untitled.png)
+
 
 1. **렌더링 중 프로필 img 태그를 만나 속성 src를 통해 요청**
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b967e3a6-4b34-4308-9b39-e5ed336f31d5/Untitled.png)
+
 
 1. **302 응답을 통해 헤더의 location에 또다시 요청**
 
@@ -543,12 +543,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
 ## 이번 주 수업을 마치며..
 
-김동현2 : 
+김동현2 : 열심히 마무리 하자
 
 이승훈 : 
 
-손정아 : 
+손정아 : 도커 실습 중 도커라이즈 부분이 어려워서 주말동안 복습해야 필요할 것 같다. 
 
 박종수 : 고객센터 구현을 마무리 짓기위해 지난 수업을 다시 복습하는중이라 이번주 수업을 잘 따라가지 못했다. 다른 팀원들의 도움으로 요약만 회고 할 수 있었고 추후에 다시 따라가는데 도움이 될 것 같다. 구현하는 것을 얼른 마무리하여 밀린 진도를 따라 가야할 것 같다.
 
-최태승 :
+최태승 : 도커 강의가 많이 어려운데 강사님의 강의를 돌려보고 인터넷을 찾아보면서 부족한 점을 채워넣기 위해 노력을 할 예정이다
