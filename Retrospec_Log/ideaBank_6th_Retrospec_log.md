@@ -249,8 +249,293 @@ docker build -t docker_image_name
 
 
 
-## 팀원 주요 이슈
+## 팀원 선정 주요 
 
+## 📌Docker
+
+---
+
+### **❔이미지 제작하기**
+
+- **방화벽 끄기**
+
+```bash
+sudo systemctl stop firewalld
+
+sudo systemctl disable firewalld
+```
+
+- **nodejs 설치**
+
+```bash
+sudo yum install nodejs -y
+```
+
+- **express 설치**
+
+```bash
+npm install express
+```
+
+- **Dockerfile 생성**
+
+```bash
+# 최신 node 이미지로 부터 시작
+FROM node
+
+# Working Directory 지정
+# 도커 컨테이너의 작업폴더를 지정
+WORKDIR /usr/src/app
+
+# COPY package.json ./
+# 앞의 ./는 HOST OS의 현재 폴더를 의미
+# 뒤의 ./는 컨테이너의 현재 폴더(WORKDIR)를 의미
+# 즉 외부에서 만들어둔 package.json 파일을 컨테이너 내부로 복사하겠다는 의미
+COPY ./ ./
+
+# node의 종속성 다운로드
+# RUN 명령어는 컨테이너에서 실행
+RUN npm install
+
+# 안해도 되지만, 하는게 좋습니다.
+# 이 컨테이너는 8080 포트를 사용한다는 의미 입니다.
+EXPOSE 8080
+
+# docker run 명령에서 실행항 명령이, 이 명령어 부터는 제작타임이 아닌 런타임에서 실행됨
+CMD ["node", "index.js"]
+```
+
+- **이미지 생성**
+
+```bash
+docker build -t examhello .
+```
+
+- **이미지 확인**
+
+```bash
+docker images
+```
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4c716920-9ff8-4c35-a565-b9dcf241b5d8/Untitled.png)
+
+## 📌 Spring Boot
+
+---
+
+### ❔프로필 이미지 URL 캐시 설정
+
+**현재 메인 페이지에서 일어나는 상황을 보면, `요청이 총 세 번 발생`하게 된다. (두 번도 맞음)**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d6a9245d-6a28-496c-99b7-64df67bc018a/Untitled.png)
+
+1. **메인 페이지 접근 요청**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b2a33f7f-8a2c-4189-88b1-6cb48714f69f/Untitled.png)
+
+1. **렌더링 중 프로필 img 태그를 만나 속성 src를 통해 요청**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b967e3a6-4b34-4308-9b39-e5ed336f31d5/Untitled.png)
+
+1. **302 응답을 통해 헤더의 location에 또다시 요청**
+
+**매번 요청이 들어올 때마다, 이미지 파일을 두 번 요청해서 가지고 오지 않고, 캐시를 통해 기억할  수 있도록 해보자!**
+
+```java
+@GetMapping("/profile/img/{id}")
+public ResponseEntity<Object> showProfileImg(@PathVariable Long id) throws URISyntaxException {
+    URI redirectUri = new URI(memberService.getMemberById(id).getProfileImgUrl());
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setLocation(redirectUri);
+    httpHeaders.setCacheControl(CacheControl.maxAge(60 * 60 * 1, TimeUnit.SECONDS));
+    return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
+}
+```
+
+**2번 요청이 들어왔을 때, 헤더의 location으로 재요청 해야 했던 URI를 브라우저 캐시에 담아준다.**
+
+**유효시간이 유효할 동안에는, 브라우저 캐시를 통해 해당 URI로 접근하여 파일을 가져온다.**
+
+### ❔카카오 로그인
+
+**카카오 개발자 도구에 애플리케이션을 등록하여 카카오 로그인을 활성화 한다.**
+
+**build.gradle**
+
+```java
+implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+```
+
+**application-base-addi.yml**
+
+```yaml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: [REST ID]
+```
+
+**application.yml**
+
+```yaml
+security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: 
+            scope: profile_nickname, profile_image, account_email
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8010/login/oauth2/code/kakao
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+```
+
+**login.html**
+
+```html
+<div>
+    <a href="/oauth2/authorization/kakao">카카오로그인</a>
+</div>
+```
+
+**까지 기본적인 설정 추가.**
+
+**SecurityConfig.java**
+
+```java
+public class SecurityConfig {
+    @Autowired
+    private OAuth2UserService oAuth2UserService;
+
+		...
+
+		.oauth2Login(
+			  oauth2Login -> oauth2Login
+          .loginPage("/member/login")
+		      .userInfoEndpoint(
+	            userInfoEndpoint -> userInfoEndpoint
+                  .userService(oAuth2UserService)
+          )
+		)
+```
+
+**oauth2Login이 처리될 로그인 페이지를 설정해주며, `userService`를 OAuth2UserService로 설정한다.**
+
+**MemberContext.java** 
+
+```java
+@Getter
+public class MemberContext extends User implements OAuth2User {
+    
+		...
+
+    private Map<String, Object> attributes;
+    private String userNameAttributeName;
+
+    ...
+
+    public MemberContext(Member member, List<GrantedAuthority> authorities, Map<String, Object> attributes, String userNameAttributeName) {
+        this(member, authorities);
+        this.attributes = attributes;
+        this.userNameAttributeName = userNameAttributeName;
+    }
+
+    @Override
+    public Set<GrantedAuthority> getAuthorities() {
+        return super.getAuthorities().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+
+    @Override
+    public String getName() {
+        return this.getAttribute(this.userNameAttributeName).toString();
+    }
+}
+```
+
+`**OAuth2User`상속을 해주어야 한다. 그 후 메서드 3개를 오버라이딩 하여 값을 설정해준다.**
+
+**OAuth2UserService.java**
+
+```java
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class OAuth2UserService extends DefaultOAuth2UserService {
+		@Autowired
+    private MemberRepository memberRepository;
+
+    @Override
+    @Transactional
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
+                .getUserNameAttributeName();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+
+        String oauthId = oAuth2User.getName();
+
+        Member member = null;
+        String oauthType = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+
+        if (!"KAKAO".equals(oauthType)) {
+            throw new OAuthTypeMatchNotFoundException();
+        }
+
+        if (isNew(oauthType, oauthId)) {
+            switch (oauthType) {
+                case "KAKAO" -> {
+                    Map attributesProperties = (Map) attributes.get("properties");
+                    Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
+                    String nickname = (String) attributesProperties.get("nickname");
+                    String email = "%s@kakao.com".formatted(oauthId);
+                    String username = "KAKAO_%s".formatted(oauthId);
+
+                    if ((boolean) attributesKakaoAcount.get("has_email")) {
+                        email = (String) attributesKakaoAcount.get("email");
+                    }
+
+                    member = Member.builder()
+                            .email(email)
+                            .username(username)
+                            .password("")
+                            .build();
+
+                    memberRepository.save(member);
+                }
+            }
+        } else {
+            member = memberRepository.findByUsername("%s_%s".formatted(oauthType, oauthId))
+                    .orElseThrow(MemberNotFoundException::new);
+        }
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("member"));
+        return new MemberContext(member, authorities, attributes, userNameAttributeName);
+    }
+
+    private boolean isNew(String oAuthType, String oAuthId) {
+        return memberRepository.findByUsername("%s_%s".formatted(oAuthType, oAuthId)).isEmpty();
+    }
+}
+```
+
+`**isNew` 를 통해 가입한 적이 없다면, Member 객체를 생성하여 저장해주도록 한다.**
 
 
 
