@@ -36,4 +36,10 @@ https://docs.google.com/spreadsheets/d/12drLUe0vMTaYZN4ZzNBLb6nnTs-Eypkv_mdJYWz_
 docker, github actions 활용한 배포 관련된 공부를 각자 구성원이 하기로 함.
 이번주 금요일 최종 점검 있을 예정이기에 최대한 코드 통합, 마무리 후 배포 시도할 예정.
 
+<br>
+<hr>
+
+## 개발 결과물 공유
+https://github.com/likelion-backendschool/ideaBank/tree/developer
+
 
