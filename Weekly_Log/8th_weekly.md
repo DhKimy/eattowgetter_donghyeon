@@ -52,4 +52,4 @@ https://docs.google.com/spreadsheets/d/12drLUe0vMTaYZN4ZzNBLb6nnTs-Eypkv_mdJYWz_
 <hr>
 
 ## 개발 결과물 공유
-https://github.com/likelion-backendschool/ideaBank/tree/developer
+https://github.com/likelion-backendschool/ideaBank/tree/developer_second
