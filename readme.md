@@ -1,5 +1,5 @@
 # ideaBANK -  eatTwoGetter
-<img src="https://user-images.githubusercontent.com/107593020/192379736-10117707-1169-463d-9475-1d2297bdb8c5.png" style="zoom:50%;"/>
+<img src="https://user-images.githubusercontent.com/107593020/192379736-10117707-1169-463d-9475-1d2297bdb8c5.png" style="zoom:30"/>
 
 
 
