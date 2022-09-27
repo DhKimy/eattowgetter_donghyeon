@@ -193,6 +193,7 @@
     │  ├─images
     |  |
     │  ├─js
+    │  │  │  board-list.js
     │  │  │  breakpoints.min.js
     │  │  │  browser.min.js
     │  │  │  category-marker.js
@@ -205,6 +206,7 @@
     │  │  │  modal-board.js
     │  │  │  modal-category.js
     │  │  │  modal-chat.js
+    │  │  │  modal-myProfile.js
     │  │  │  register.js
     │  │  │  util.js
     │  │  │
