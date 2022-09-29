@@ -29,6 +29,7 @@
 
 ### 📣개발환경
 
+* JAVA 17
 * IntelliJ
 * GitHub
 
@@ -40,9 +41,9 @@
 
 ###### Spring boot
 
-* JAVA 17
 * Spring MVC
-* Spring Boot Security
+* Spring Security
+* JPA
 * Spring Web
 * Lombok
 
